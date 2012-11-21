@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}{{ block.super }} | {{ thispage }} {% endblock %}
+
+{% block nav %}
+	{% for p in pages %}
+		{% if p.name == thispage %}
+			<li class="active"><a href="{{ p.url }}">{{ p.name }}</a></li>
+		{% else %}
+			<li><a href="{{ p.url }}">{{ p.name }}</a></li>
+		{% endif %}
+	{% endfor %}
+{% endblock nav %}
+
+{% block content %}
+<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+	<h1>{{ proj_name }}</h1>
+	<h2>{{ proj_description }}</h2>
+	<h2></h2>
+	<p>list of Trends:
+	
+		<ul>
+		{% for t in trends %}	     
+	     <li>{{ t }} </li>
+		{% endfor %}			
+		</ul>
+		<ul>
+		{% for g in gtrends %}	     
+	     <li>{{ g }} </li>
+		{% endfor %}			
+		</ul>
+
+		
+		
+	</p>
+	
+</div>
+
+<!-- Example row of columns -->
+<div class="row" id="about">
+	
+</div>
+
+<br>
+
+<div class="row">
+	
+</div>
+{% endblock content %}
+
+{% block scripts %}
+{% endblock scripts %}

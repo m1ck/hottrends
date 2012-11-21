@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}{{ block.super }} | Home {% endblock %}
+
+{% block nav %}
+	{% for p in pages %}
+		{% if p.name == thispage %}
+			<li class="active"><a href="{{ p.url }}">{{ p.name }}</a></li>
+		{% else %}
+			<li><a href="{{ p.url }}">{{ p.name }}</a></li>
+		{% endif %}
+	{% endfor %}
+{% endblock nav %}
+
+{% block content %}
+<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+	<h1>Sample Guestbook App</h1>
+	<h2>Browse the Backend to get a good feel for this stuff</h2>
+	<hr>
+	<p class="center">
+    <a class="btn primary" id="leavenote">Leave a note</a>
+	</p>
+  <hr>
+  {% for note in notes %}
+    <div class="row">
+      <div class="span4">
+        <small>Posted by:</small><br/>
+        {{ note.author.name }}<br/>
+        <small>Posted on:</small><br/>
+        {{ note.posttime|date:"%F %d at %P" }}
+      </div>
+      <div class="span16">
+        {% if note.images %}
+          <ul class="media-grid">
+            {% for image in note.images %}
+              <li>
+                <a href="#">
+                  <img src="img/{{ image.id }}">
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <p>
+          {{ note.message }}
+        </p>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+<div class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto; z-index: 1">
+  <div class="modal-header">
+    <h3>Lorem ipsum</h3>
+    <a href="#" class="close">&amp;times;</a>
+  </div>
+  <div class="modal-body">
+    <p>Lorem ipsum dolor sit amet</p>
+  </div>
+  <div class="modal-footer">
+      <a href="#" class="btn primary">Lorem ipsum dolor</a>
+      <a href="#" class="btn">Sit Amet</a>
+  </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+  <script type="text/javascript">
+    var options = {
+      backdrop = true,
+      keyboard = true
+    };
+    $('#leavenote').modal(options);
+  </script>
+{% endblock scripts %}

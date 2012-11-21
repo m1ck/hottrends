@@ -1,0 +1,22 @@
+@dark: #111;
+@medium: lighten(@dark, 30%);
+@light: lighten(@medium, 10%);
+@x: 0px;
+@y: 0px;
+@blur: 0px;
+@size: 3px;
+
+
+
+.gradient-shadow-alt {
+  webkit-box-shadow: @x @y @blur @size @dark, @x + 1 @y + 1 @blur @size @medium, @x + 2 @y + 2 @blur @size @light;
+  -webkit-box-shadow: @x @y @blur @size @dark, @x + 1 @y + 1 @blur @size @medium, @x + 2 @y + 2 @blur @size @light ;
+  -moz-box-shadow: @x @y @blur @size @dark, @x + 1 @y + 1 @blur @size @medium, @x + 2 @y + 2 @blur @size @light;
+  box-shadow: @x @y @blur @size @dark, @x + 1 @y + 1 @blur @size @medium, @x + 2 @y + 2 @blur @size @light;
+}
+
+.gradient-shadow {
+  webkit-box-shadow: @x @y  @dark, @x + 1 @y + 1  @medium, @x + 2 @y + 2  @medium, @x + 3 @y + 3 @medium,  @x + 4 @y + 4 @light, @x + 5 @y + 5 @light;
+  -webkit-box-shadow:@x @y  @dark, @x + 1 @y + 1  @medium, @x + 2 @y + 2  @medium, @x + 3 @y + 3 @medium,  @x + 4 @y + 4 @light, @x + 5 @y + 5 @light; -moz-box-shadow: @x @y  @dark, @x + 1 @y + 1  @medium, @x + 2 @y + 2  @light;
+  box-shadow:@x @y  @dark, @x + 1 @y + 1  @medium, @x + 2 @y + 2  @medium, @x + 3 @y + 3 @medium,  @x + 4 @y + 4 @light, @x + 5 @y + 5 @light;
+}

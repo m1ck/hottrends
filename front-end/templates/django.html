@@ -1,0 +1,646 @@
+{% extends "base.html" %}
+
+{% block title %}{{ block.super }} | {{ thispage }} {% endblock %}
+
+{% block css%}
+  	<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>		
+		<link rel="stylesheet" href="front-end/media/reveal.js/css/reset.css">
+		<link rel="stylesheet" href="front-end/media/reveal.js/css/main.css">
+		<link rel="stylesheet" href="front-end/media/reveal.js/lib/zenburn.css">
+    <style type="text/css">
+      body {
+        padding-top: 40px;
+      }
+      ul.nav li, footer, .popover {
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size: 13px;
+        font-weight: normal;
+        line-height: 18px;
+      }
+      .topbar .brand {
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        float: left;
+        display: block;
+        padding: 8px 20px 12px;
+        margin-left: -20px;
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 200;
+        line-height: 1;
+      }
+    </style>
+
+{% endblock %}
+
+{% block nav %}
+	{% for p in pages %}
+		{% if p.name == thispage %}
+			<li class="active"><a href="{{ p.url }}">{{ p.name }}</a></li>
+		{% else %}
+			<li><a href="{{ p.url }}">{{ p.name }}</a></li>
+		{% endif %}
+	{% endfor %}
+{% endblock nav %}
+
+{% block content %}	
+</div>	
+<div id="reveal">
+  <!-- Any section element inside of this container is displayed as a slide -->
+  <div class="slides">
+    <section>
+      <h1>Django</h1>
+      <h3 class="inverted">A very abreviated introduction</h3>
+      <p>
+        Presentation by Alex Rattray
+      </p>
+      <p>
+        rattray@decisioncandy.com
+      </p>
+      <hr>
+      <p>
+        This slideshow is done in <a href="https://github.com/hakimel/reveal.js">reveal.js</a>
+      </p>
+      <h4>Use your arrow keys to navigate,
+        <br /> 
+        space bar to zoom out
+      </h4>
+      <script>
+        // Delicously hacky. Look away.
+        if( navigator.userAgent.match( /(iPhone|iPad|iPod|Android)/i ) )
+        document.write( '<p style="color: rgba(0,0,0,0.3); text-shadow: none;">('+'Tap to navigate'+')</p>' );
+      </script>
+    </section>
+    
+    <section>
+      <h2>First, Introductions.</h2>
+      <p class="fragment">
+        Who am I?
+        <ul class="fragment">
+          <li>Not a seasoned pro</li>
+        </ul>
+      </p>
+      <p class="fragment">
+        Who are you?
+        <ul class="fragment">
+          Ideally:
+          <li>You know (some) Python</li>
+          OR
+          <li>You know HTML/CSS/etc and might want to be on a django team</li>
+        </ul>
+      </p>
+    </section>
+    
+    <section>
+      <h2>What are we trying to do here?</h2>
+      <p>
+        Give you enough of a working knowlege
+        to hack something out this weekend
+        using Django. 
+      </p>
+      <h3>Note: I'll be trying to speak to the common denominator. INTERUPT WITH QUESTIONS PLEASE</h3>
+      <img src="http://img.ffffound.com/static-data/assets/6/f68d6f666acd241f206822f5ca9f3c0203f0b1fd_m.png">
+    </section>
+    
+    <section>
+      <h2>Table of Contents</h2>
+      <ol>
+        <li><a href="#/4">Intro to the Web</a></li>
+        <li><a href="#/5">Django Background</a></li>
+        <li><a href="#/6">urls.py</a></li>
+        <li><a href="#/7">models.py</a></li>
+        <li><a href="#/8">views.py</a></li>
+        <li><a href="#/9">Templates</a></li>
+        <li><a href="#/10">Forms</a></li>
+        <li><a href="#/11">Practice!</a></li>
+      </ol>
+    </section>
+    
+    <section>
+      <section>
+        <h2>Intro to the Web</h2>
+        <h3>Static Pages</h3>
+        <p>
+          <ol>
+            <li>User hits url: <code>decisioncandy.com/rank/design.html</code></li>
+            <li>Goes to file in folder (<code>root:/rank/design.html</code>)</li>
+            <li>Contents of file --> DOM (Document Object Model)</li>
+            <li>If there's Javascript, it's processed in the user's browser (client-side / locally)</li>
+          </ol>
+        </p>
+        <a class="down" href="#/4/2">&#x25BC;</a>
+      </section>
+      
+      <section>
+        <h2>Intro to the Web</h2>
+        <h3>Basic DOM example</h3>
+        <pre contenteditable="true"><code>
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;h1 style="font-size:72px; text-align:center; padding-top:150px; font-family:Verdana, Geneva, sans-serif"&gt;
+      &lt;span style="color:#888"&gt;
+        Hello, 
+      &lt;/span&gt;
+      &lt;span style="color:#011F5B"&gt;
+        World. 
+      &lt;/span&gt;
+      &lt;span style="color:#990000"&gt;
+        Penn. 
+      &lt;/span&gt;
+    &lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+        </code></pre>
+        <a class="down" href="#/4/3">&#x25BC;</a>
+      </section>
+      <section>
+        <h2>Intro to the Web</h2>
+        <h3>Static &lt; Dynamic</h3>
+        <p>
+          Obviously, you don't want to write out
+          all the content of sites by hand.
+        </p>
+        <p>
+          Dynamic sites store and gather information, 
+          treat different users differently, 
+          and generally <em>do</em> stuff. 
+        </p>
+        <p>
+          You're here to <em>do</em> stuff. 
+        <p>
+        <p>
+          There are lots of different ways to do that. 
+          I personally think Django is a terrific one. 
+        </p>
+        <a class="right" href="#/5">&#x25BA;</a>
+      </section>
+    </section>
+
+    <section>
+      <section>
+        <h2>Django Background</h2>
+        <h3>Backstory</h3>
+        <ul>
+          <li>
+            Django was written by a couple of guys 
+            who did the website for a newspaper. 
+          </li>
+          <li>
+            fast, reliable, information-driven
+          </li>
+          <li>
+            Open Source, widely used/discussed/improved
+          </li>
+          <li>
+            xxx hits on StackOverflow 
+          </li>
+          <li>
+            Uses Python (easy/quick to read, write, process)
+          </li>
+        </ul>
+        <a class="down" href="#/5/2">&#x25BC;</a>
+      </section>
+      
+      <section>
+        <h2>Django Background</h2>
+        <h3>Philosophy</h3>
+        <p>
+          DRY (Don't Repeat Yourself)
+        </p>
+        <p>
+          MVC (Model View Controller)
+        </p>
+        <a class="right" href="#/6">&#x25BA;</a>
+      </section>
+    </section>
+    
+    <section>
+      <section>
+        <h2>urls.py</h2>
+        <h3>
+          "C" in "MVC" 
+        </h3>
+        <ul>
+          <li>
+            Controls how requests are handled. Pointed to in settings.py 
+          </li>
+          <li>
+            Typically in root folder (created by default when you launch a new django project)
+          </li>
+          <li>
+            In the DecisionCandy HackPack, you'll find it in root:/app/urls.py
+          </li>
+        </ul>
+        <a class="down" href="#/6/2">&#x25BC;</a>
+      </section>
+      
+      <section>
+        <h2>urls.py</h2>
+        <p>
+          In pure html or php sites,
+          a request hits a file in a folder given by the url path 
+          (more or less). 
+        </p>
+        <p>
+          In Django, a request is directed to urls.py, 
+          which decides how to handle it. 
+        </p>
+        <p>
+          For example: <code>decisioncandy.com/foo/bar/</code> <br>
+          hits urls.py: <code>(r'^foo/bar/$', views.foo_bar)</code>
+        </p>
+        <a class="down" href="#/6/3">&#x25BC;</a>
+      </section>
+      <section>
+        <h2>urls.py</h2>
+        <p>
+          With regex (regular expressions), we can have lots of dynamic fun: 
+          <code>(r'rank/(\w{1,5})/$', views.rank)</code> 
+          (ie: <code>decisioncandy.com/foo/rank/bar/</code>)
+        </p>
+        <a class="right" href="#/7">&#x25BA;</a>
+      </section>
+    </section>
+    
+    <section>
+      <section>
+        <h2>models.py</h2>
+        <h3>'M' in 'MVC'</h3>
+        <p>
+          Managing Data is important. 
+        </p>
+        <p>
+          Django traditionally relies on Relational Databases like MySQL, 
+          but other options are available. 
+        </p>
+        <p>
+          (HackPack relies on Datastore)
+        </p>
+        <a class="down" href="#/7/2">&#x25BC;</a>
+      </section>
+      <section>
+        <h2>models.py</h2>
+        <p>
+          <ul>
+            <li>The Object-Relational Mapping (ORM) 
+          abstraction layer in Django is handled 
+          in the form of Python classes. 
+            </li>
+            <li>
+              It writes SQL for you.
+            </li>
+            <li>Which rocks. </li>
+          </ul>
+        </p>
+        <a class="down" href="#/7/3">&#x25BC;</a>
+      </section>
+                
+      <section>
+        <h2>models.py</h2>
+        <p>defining models:
+          <pre contenteditable="true"><code>
+class Project(models.Model): 
+    name = models.CharField(verbose_name="Name of the Project", max_length=100)
+    description = models.TextField()
+    creator = models.ForeignKey('Client', related_name='projects', null=True)
+    reward = models.FloatField(default=0)
+    sillies = models.ManytoManyField('Sillynesses')
+    uno = models.OneToOneField('Uno')
+    slug = models.SlugField()
+    signup_date = models.DateTimeField(default=datetime.datetime.today())
+
+    @property
+    def total_votes(self):
+        votes = 0
+        images = self.images.all()
+        for image in images:
+            votes += image.winvotes.count()
+        return str(votes)
+
+    def __unicode__(self):
+        return self.name
+          </code></pre>
+        </p>
+        <a class="down" href="#/7/4">&#x25BC;</a>
+      </section>
+      <section>
+        <h2>models.py</h2>
+        <p>adding entries (can do by admin, I'm not covering that)
+          <pre contenteditable="true"><code>
+new_project = Project(
+    name = "Chicken Little",
+    description = new_project_dict['description'],
+    creator = Client.objects.get(name=form_data['creator']),
+    reward = 37.98,
+    sillies = Sillynesses.objects.order_by('?')[0],
+    uno = Uno.objects.all()[0],
+    slug = slugify("Chicken Little")
+    )
+new_project.save()
+
+old_project = Project.objects.get(pk=1)
+old_project.name = "Rooster Huge"
+old_project.save()
+          </code></pre>
+        </p>
+        <a class="down" href="#/7/5">&#x25BC;</a>
+      </section>
+      <section>
+        <h2>models.py</h2>
+        <p>Making queries
+          <pre contenteditable="true"><code>
+from app.models import *
+project = Project.objects.get(field='thing')
+fun_projects = Project.objects.filter(description__contains="fun")
+boring_projects = Project.objects.exclude(description="fun")
+ordered_projects = Project.objects.order_by(signup_date)
+project_queryset = Project.objects.all()
+project_list = [p for p in project_queryset]
+          </code></pre>
+          <a href="https://docs.djangoproject.com/en/1.3/topics/db/queries/">
+            learn more here
+          </a>
+        </p>
+        <a class="right" href="#/8">&#x25BA;</a>
+      </section>
+    </section>
+    
+    <section>
+      <section>
+        <h2>Views.py</h2>
+        <h3>"V" in "MVC"</h3>
+        <ul>
+          <li>
+            So urls.py (the controller) sends a request to views.py (the views)
+          </li>
+          <li>
+            Views then has to process that and send a DOM back to the browser. 
+          </li>
+          <li>
+            Views is the real "meat" of the application (imo) where 
+            logic/processing/algorithms/magic usually occur
+          </li>
+        </ul>
+        <a class="down" href="#/8/2">&#x25BC;</a>
+      </section>
+      
+      <section>
+        <h2>views.py</h2>
+        <h3>without further ado...</h3>
+        <p> A simple Example: 
+          <pre contenteditable="true"><code>
+def index(request):
+  projects = Project.objects.all().order_by('name')
+  context = {
+      'project_table': divide(projects, ROW_WIDTH),
+      'user': request.user,
+      }
+  return render_to_response('index.html', context)
+          </code></pre>
+        </p>
+        <a class="down" href="#/8/3">&#x25BC;</a>
+      </section>
+      <section>
+        <h2>views.py</h2>
+        <p> A more complex example: 
+          <pre contenteditable="true"><code>
+def rank(request, project): 
+  project_name = str(project)
+  project = Project.objects.get(name=project_name)
+  images = [image.id for image in project.images.all()]
+  logging.warning(images)
+  
+  n = len(images)
+  k = 2
+  nCr = lambda n,k: int(round(
+    reduce(mul, (float(n-i)/(i+1) for i in range(k)), 1)
+    ))
+  max_limit = 5
+  limit = min(nCr(n,k), max_limit)
+  pairs = []
+  for i in range(limit):
+    left, right = random.sample(images, 2)
+    pair = [left, right]
+    while isUnique(pairs, pair)!= True:
+      left, right = random.sample(images, 2)
+      pair = [left, right]
+    pairs.append(pair)
+      
+  context = {
+    'Project': project,
+    'limit': limit,
+    'img_list': pairs,
+    'user': request.user,
+    }
+  return render_to_response('rank.html',context, context_instance = RequestContext(request))
+          </code></pre>
+        </p>
+        <a class="down" href="#/8/4">&#x25BC;</a>
+      </section>
+      <section>
+        <h2>views.py</h2>
+        <p> A POST example:
+          <pre contenteditable="true"><code>
+def vote(request):
+  if request.method == 'POST':
+    data = request.POST
+    w = Image.objects.get(id__exact=data['winner'])
+    l = Image.objects.get(id__exact=data['loser'])
+    vote = Vote(
+      winner = w,
+      loser = l,
+      time = datetime.datetime.now(),
+      winner_comment = data['winner_comment'],
+      loser_comment = data['loser_comment']
+    )
+  vote.save()
+  return HttpResponse('boo!')
+          </code></pre>
+        </p>
+        <a class="right" href="#/9">&#x25BA;</a>
+      </section>
+    </section>
+    <section>
+      <section>
+        <h2>templates</h2>
+        <p>
+          So far, we have: 
+        </p>
+        <p> urls.py (directs request) <br>&#x25BC;</p>
+        <p>views.py (processes request) <br>&#x25BC;</p>
+        <p class="fragment">
+          template (takes the variables, processes django template)
+          <br>&#x25BC;</p>
+        <p>complete DOM to the browser</p>
+        <a class="down" href="#/9/2">&#x25BC;</a>
+      </section>
+      <section>
+        <h2>templates</h2>
+        <p>extends, block (parent's perspective)
+          <pre contenteditable="true"><code>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;link blahblah&gt;
+    &lt;script blahblah&gt;&lt;/script&gt;
+    &lt;title&gt;{&#37; block title &#37;}DecisionCandy{&#37; endblock &#37;}&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;header&gt;This is the bar at the top of every screen! never changes. &lt;/header&gt;
+    &lt;div id="main"&gt;
+    {&#37; block content &#37;}
+    {&#37; endblock content &#37;}
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+          </pre></code>
+        </p>
+        <a class="down" href="#/9/3">&#x25BC;</a>
+      </section>
+      <section>
+        <h2>templates</h2>
+        <p>extends, block (child's perspective)
+          <pre contenteditable="true"><code>
+{&#37; extends "base.html" &#37;}
+
+{&#37; block title &#37;}{&#123; block.super }} | Rank {&#123; Project.name }} {&#37; endblock &#37;}
+
+{&#37; block content &#37;}
+blaah &lt;blah&gt; blah &lt;/blah&gt; blah
+{&#37; endblock content &#37;}
+          </pre></code>
+        </p>
+        <a class="down" href="#/9/4">&#x25BC;</a>
+      </section>
+      <section>
+        <h2>templates</h2>
+        <p>variables
+          <pre contenteditable="true"><code>
+{&#123; Project.name }}, {&#123; Project.criteria }}, etc. or just {{ limit }}
+var project = "{&#123; Project.name|escapejs }}";
+
+filters: {&#123; project_list|length }}, {{ date|date:"M/d"|lower }}
+          </pre></code>
+          <a href="https://docs.djangoproject.com/en/1.3/ref/templates/builtins/#built-in-filter-reference">lots more</a>
+        </p>
+        <a class="down" href="#/9/5">&#x25BC;</a>
+      </section>
+      <section>
+        <h2>templates</h2>
+        <p>template tags
+          <pre contenteditable="true"><code>
+&#123;% for Project in project_list %}
+  &#123;&#123; forloop.counter }}
+  &#123;% if Project.reward > 0 %}
+    $&#123;&#123; Project.reward }}
+  &#123;% else %}
+    Sorry , &#123;&#123; Project.creator }} is a cheapskate. 
+  &#123;% endif %}
+&#123;% endfor %}
+          </pre></code>
+        <a href="https://docs.djangoproject.com/en/1.3/ref/templates/builtins/">lots more</a>
+        </p>
+        <a class="down" href="#/9/6">&#x25BC;</a>
+      </section>
+      <section>
+        <h2>templates</h2>
+        <p>
+          So, 
+          <ul>
+            <li><em>first</em> views.py processes everything 
+            and spits a list of variables into context
+            </li>
+            <li>
+              <em>then</em> the template takes in all the variables, 
+              and the Django template language is processed, 
+              generating a normal-looking DOM to send to the browser. 
+            </li>
+            <li>
+              It doesn't have to end there; 
+              <a href="http://pennapps-jquery.heroku.com/slides/35">ajax</a>
+              is your friend!
+              (remember <code> if request.method == 'POST':</code>?) although you may 
+              need the mysterious csrf_token (google it). 
+            </li>
+        </p>
+        <a class="right" href="#/10">&#x25BA;</a>
+      </section>
+    </section>
+    <section>
+      <section>
+        <h2>Forms</h2>
+      </section>
+    </section>
+    <section>
+      <section>
+        <h2>Practice!</h2>
+        <p>
+          We'll do an exercise, but first:
+        </p>
+        <h1>I'm hiring!</h1>
+        <p>for a number of projects. </p>
+        <p>I hope you don't mind if I tell you about them briefly</p>
+        <a class="down" href="#/10/2">&#x25BC;</a>
+      </section>
+      <section>
+        <h2>Practice!</h2>
+        <h3>PennCycle</h3>
+        <p>Check bikes in & out, build cool stuff. Pays $$</p>
+        <hr>
+        <h3>CourseGrapher</h3>
+        <p>Expanding what we did at the last hackathon. Work for experience</p>
+        <hr>
+        <h3>DecisionCandy</h3>
+        <p>Disrupt market research, design feedback. Work for Equity</p>
+        <a class="down" href="#/10/3">&#x25BC;</a>
+      </section>
+    </section>
+  </div>
+
+  <!-- The navigational controls UI -->
+  <aside class="controls">
+    <a class="left" href="#">&#x25C4;</a>
+    <a class="right" href="#">&#x25BA;</a>
+    <a class="up" href="#">&#x25B2;</a>
+    <a class="down" href="#">&#x25BC;</a>
+  </aside>
+
+  <!-- Displays presentation progress, max value changes via JS to reflect # of slides -->
+  <div class="progress"><span></span></div>
+  
+</div>
+<div>
+{% endblock content %}
+
+{% block scripts %}
+  		<script src="front-end/media/reveal.js/js/reveal.js"></script>
+		<script src="front-end/media/reveal.js/lib/highlight.js"></script>
+		<script>
+			// Parse the query string into a key/value object
+			var query = {};
+			location.search.replace( /[A-Z0-9]+?=(\w*)/gi, function(a) {
+				query[ a.split( '=' ).shift() ] = a.split( '=' ).pop();
+			} );
+
+			Reveal.initialize({
+				// Display controls in the bottom right corner
+				controls: true,
+
+				// Display a presentation progress bar
+				progress: true,
+
+				// If true; each slide will be pushed to the browser history
+				history: true,
+
+				// Apply a 3D roll to links on hover
+				rollingLinks: true,
+
+				// UI style
+				theme: query.theme || 'default', // default/neon
+
+				// Transition style
+				transition: query.transition || 'default' // default/cube/page/concave/linear(2d)
+			});
+
+			hljs.initHighlightingOnLoad();
+		</script>
+{% endblock scripts %}

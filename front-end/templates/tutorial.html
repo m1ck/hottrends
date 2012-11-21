@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block title %}{{ block.super }} | Home {% endblock %}
+
+{% block nav %}
+	{% for p in pages %}
+		{% if p.name == thispage %}
+			<li class="active"><a href="{{ p.url }}">{{ p.name }}</a></li>
+		{% else %}
+			<li><a href="{{ p.url }}">{{ p.name }}</a></li>
+		{% endif %}
+	{% endfor %}
+{% endblock nav %}
+
+{% block content %}
+<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+	<h1>Get Started</h1>
+	<h2><a href="#" class="popthis" rel="popover" title="A note:" data-placement="below"
+    data-content="
+      <p>
+        This tutorial is written with the assumption that
+        the reader may be a complete beginner in any given technology. 
+      </p>
+      <hr>
+      <p>
+        For example, when I did my first hackathon, 
+        I didn't know what Git was or how to do anything
+        in the command line. Other people might not have 
+        ever touched django before, but be great with javascript. 
+      </p>
+      <hr>
+      <p>
+        So if it seems like I'm babying you, keep in mind:
+        I know you're good/smart/experienced with 
+        <em>something</em>, but not necessarily <em>everything</em>. 
+      </p>
+    ">
+    This won't hurt a bit.</a>
+  </h2>
+	<hr>
+	<ol>
+    <h2>
+      <li title="Everybody">
+        Install Python 2.7
+        <p>
+          If you haven't already done this, though,
+          you'll probably have trouble writing 
+          Python logic. 
+        </p>
+        <p>
+          Assuming you're mostly on the front-end team, 
+          <a href="http://www.python.org/getit/releases/2.7/">go here</a>
+          and do what it says. Note that if you're on a Mac, 
+          you probably already have Python. 
+          It may or may not be the correct version; 
+          be sure to check. 
+        </p>
+      </li>
+      <hr>
+      <li title="Everybody">
+        Install the Google App Engine SDK
+        <p>
+          No worries if you don't have experience with GAE. 
+          Just hit up 
+          <a href="http://code.google.com/appengine/downloads.html#Google_App_Engine_SDK_for_Python">
+            this page
+          </a>
+          and do what it tells you.
+        </p>
+      </li>
+      <hr>
+      <li title="Everybody needs Git!">
+        Get Git (if not installed)
+        <p>
+          I'm serious. You need to do this. <a href="http://git-scm.com/">Read up on Git</a> if you haven't used it before. 
+        </p>
+        <p>
+          Download and install Git <a href="http://git-scm.com/download">here</a>.
+        </p>
+        <p>
+          Set up an account with either 
+          <a href="https://github.com/signup/free">GitHub</a> 
+          or <a href="https://bitbucket.org/account/signup/">BitBucket</a>. 
+          GitHub's been "rocking git" for longer and is therefore more popular, 
+          but BitBucket offers free unlimited *private* repositories 
+          with unlimited collaborators if you have a .edu email address
+          (aka if you go to college). I recommend BitBucket.
+        </p>
+      </li>
+      <hr>
+      <li>
+        Download this thing. 
+        <p title="Only one person should do this!">
+          Go <a href="https://bitbucket.org/rattray/hackpack-nodocs">here</a>
+          and click "fork" in the upper right to fork the repository. 
+          This will be your application, so give it the name you want, etc. 
+          Now invite your collaborators (<code>'invite'</code> in bitbucket, <code>'admin>collaborators'</code> in github). 
+        </p>
+        <p title="Everybody (you can each choose your own folder)">
+          Once you're ready to move on, 
+          open command prompt (or bash or whatever)
+          and cd (change directory, for the unititated)
+          to the <em>parent</em> directory of where you'd like to keep this. 
+          For example, if you wanted it on your desktop,
+          the command would be something like <code>cd c:/Users/Alex/Desktop</code>. 
+        </p>
+        <p title="Everybody clones the one made earlier">
+          Clone the repository you forked (aka, the one you just 'made')
+          from bitbucket or github. This should be something like
+          <code>git clone https://bitbucket.org/username/appname.git</code>. 
+          You'll see the url towards the top of the repository page. 
+        </p>
+        <p title="Optional">
+          You can get the full thing with docs (basically what you're looking at)
+          <a href="https://bitbucket.org/rattray/hackpack">here</a> 
+          ('get source' or 'fork' in the upper right),
+          but you should use
+          it more for reference than as a template. 
+          Especially if you're a beginner, 
+          I would recommend taking a look at it anyway 
+          as it was built expressly with reuse and 'teaching' 
+          in mind. We'll get to this later. 
+        </p>
+      </li>
+      <hr>
+      <li title="This should be done by only one person (somebody who knows Python)">
+        Make it yours. 
+        <p>
+          Open <code>app.yaml</code> in your favorite text editor
+          and change the application name to your app's name. 
+          If you don't have one, make something up with your names. 
+          It should be unique; every google app engine needs a unique name. 
+        </p>
+        <p>
+          In <code>app/views.py</code>, change all the info in the "globvars" class. 
+          If you don't want all the info auto-inserted all over the site,
+          just get rid of it and everything in the "index" function. 
+          You'll also need to delete things all over the place 
+          (mostly the &lt;head&gt; tag, the footer, and the nav I think. 
+        </p>
+        <p>
+          If you have the time/inclination, you might also change the favicon 
+          at some point. There's an example file in front-end/media/images; 
+          edit the .psd and hit file > save for web & devices and resize it 
+          to 16x16. Overwrite the favicon.ico that's currently there. 
+        </p>
+      </li>
+      <hr>
+      <li title="Only one person does this">
+        Register on GAE
+        <p>
+          GAE has a free hosting service, 
+          where your site goes on yourappname.appspot.com. 
+          I'll assume that's enough for now, but it's pretty easy
+          to get it on your own url 
+          (you just have to sign up for Google Apps, 
+          which is free for <10 people). 
+        </p>
+        <p>
+          Open the GAE SDK (Google App Engine Launcher) 
+          and hit <code>file > Add Existing Application</code>.
+          Browse to your app, hit okay, 
+          and click on your app and hit "run". 
+          It'll take a few minutes to boot, 
+          but once there's a green arrow next to your app name, 
+          you're good to go. Click "browse" to see the locally 
+          hosted site! 
+        </p>
+        <p>
+          Go to <a href="https://appengine.google.com/">https://appengine.google.com/</a>
+          and hit "Create Application". Give it your app name.  
+        </p>
+        <p>
+          Click "Permissions" on the left under "Administration" 
+          to add everyone else in your team. 
+        </p>
+        <p>
+          Then go back to the SDK, and if you had to change your app name, 
+          click "edit", and modify the app.yaml to match the name you registered with. 
+        </p>
+        <p>
+          When you're ready to put something up on the interwebs, 
+          just hit deploy. It's really as easy as that. 
+        </p>
+      </li>
+      <hr>
+      <li title="Everbody does this! Commit early, commit often.">
+        Hack!
+        <p>
+          If you run into problems that don't seem like 
+          generic issues with the given technology
+          (ie; standard Django troubles), check out the 
+          <a href="http://bitbucket.org/rattray/hackpack">docs code</a>
+          and the <a href="../../guestbook">guestbook app,</a>. 
+        </p>
+        <p>
+          If neither of those do you any good, 
+          and googling seems futile, feel free to 
+          shoot me an email anytime and I'd be happy 
+          to get back to you asap. I'm rattray@decisioncandy.com. 
+        </p>
+      </li>
+    </h2>
+  </ol>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  var poptions = {'html':true};
+  $('.popthis').popover(poptions);
+  var twiptions = {'placement':'left', 'offset': 20};
+  $('li').twipsy(twiptions);
+  $('li p').twipsy(twiptions);
+</script>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}{{ block.super }} | {{ thispage }} {% endblock %}
+
+{% block nav %}
+	{% for p in pages %}
+		{% if p.name == thispage %}
+			<li class="active"><a href="{{ p.url }}">{{ p.name }}</a></li>
+		{% else %}
+			<li><a href="{{ p.url }}">{{ p.name }}</a></li>
+		{% endif %}
+	{% endfor %}
+{% endblock nav %}
+
+{% block content %}
+<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+	<h1>Other great resources</h1>
+	<hr>
+  <h2>An incomplete list</h2>
+  <ul>
+    <li>
+      <h3>Styling Resources</h3>
+      <ul>
+        <li><a href="http://twitter.github.com/bootstrap">Docs for Bootstrap</a></li>
+        <li>
+          Bootstrap is written in <a href="http://lesscss.org/">LESS</a>, 
+          a terrific "dynamic stylesheet language"
+          that lets you use variables, mixins, operations, 
+          and functions with CSS. 
+          If you want to do a lot of styling work, I'd recommend
+          considering LESS in conjunction with 
+          <a href="http://winless.org/">WinLess</a>, 
+          which compiles all your LESS to CSS files 
+          every time you hit save. 
+          Makes styling much easier, in my opinion.
+        </li>
+        <li><a href="http://foundation.zurb.com/docs/">Foundation, an alternative to bootstrap</a></li>
+        <li>
+          <a href="http://compass-style.org/">Compass</a>, which is based on 
+          <a href="http://sass-lang.com/">Sass</a> (an alternative to Less), 
+          is another good framework (or so I'm told) 
+          for authoring solid CSS, with a lot of great stuff built in. 
+        </li>
+        <li>
+          If responsive design is really what you're all about, 
+          (ie; you want to do a great job on lots of different screen sizes), 
+          definitely check out <a href="http://susy.oddbird.net/susy320/">320+Susy</a>
+          for a remarkable example (resize your window on it! lots!) and some good resources. 
+          
+        </li>
+      </ul>
+    </li>
+    <hr>
+    <li>
+      <h3>Django, App Engine</h3>
+      <ul>
+
+        <li>This project relies heavily on the work done by Waldemar Kornewald and Thomas Wanschik at 
+          <a href="http://www.allbuttonspressed.com">All Buttons Pressed</a> 
+          on their projects django-nonrel and its 'successor', 
+          <a href="http://www.allbuttonspressed.com/projects/djangoappengine">djangoappengine</a>
+        </li>
+      </ul>
+    </li>
+    <hr>    
+    <li>
+      <h3>General Stuff</h3>
+      <ul>
+        <li><a href="http://www.screencast-o-matic.com/">Screencast-o-matic, a tool for Screencasts (potentially useful for demos)</a></li>
+        <li><a href=""></a></li>
+        <li></li>
+      </ul>
+    </li>
+    <hr>    
+    <li>
+      <h3>Styling Resources</h3>
+      <ul>
+        <li><a href="http://twitter.github.com/bootstrap">Docs for Bootstrap</a></li>
+        <li><a href="http://foundation.zurb.com/docs/">Foundation, an alternative to bootstrap</a></li>
+        <li></li>
+      </ul>
+    </li>
+    <hr>
+  </ul>
+</div>
+{% endblock content %}

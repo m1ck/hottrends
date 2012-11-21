@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}{{ block.super }} | Home {% endblock %}
+
+{% block nav %}
+	{% for p in pages %}
+		{% if p.name == thispage %}
+			<li class="active"><a href="{{ p.url }}">{{ p.name }}</a></li>
+		{% else %}
+			<li><a href="{{ p.url }}">{{ p.name }}</a></li>
+		{% endif %}
+	{% endfor %}
+{% endblock nav %}
+
+{% block content %}
+<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+	
+	<h2>{{ the_tweet }} ::: {{ sentmnt }}</h2>
+	<hr>
+  <p>
+       <form class="navbar-form pull-left" method="get" action="">
+      <input type="text" class="span5" name=q value="{{ the_tweet }}">
+      <button type="submit" class="btn">Submit</button>
+    </form>
+   
+  </p>
+  
+</div>
+{% endblock content %}

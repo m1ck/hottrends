@@ -11,3 +11,9 @@ class Employee(db.Model):
   hire_date = db.DateProperty()
   new_hire_training_completed = db.BooleanProperty(indexed=False)
   email = db.StringProperty()
+ 
+ 
+class Trend(db.Model):
+  title = db.StringProperty()
+  source = db.StringProperty()
+  created = db.DateTimeProperty(auto_now_add=True) 

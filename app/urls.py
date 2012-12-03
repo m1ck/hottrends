@@ -22,8 +22,9 @@ urlpatterns = patterns('',
     (r'^nltkshow/$', nltkshow),
     (r'^twitgraph/$', twitgraph),
     (r'^nltksentiment/$', nltksentiment),
-    
-    
+    (r'^load/$', load),
+    (r'^mostfrequent/$', mostfrequent),
+
     #guestbook stuff
     #(r'^login/$', login),
     #(r'^signup/$', signup),

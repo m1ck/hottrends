@@ -9,7 +9,8 @@ from django.contrib import auth
 from google.appengine.api import images 
 from google.appengine.ext import db
 from django.template.defaultfilters import slugify
-from models import Employee
+from models import Employee ,Trend
+
 import nltk
 from nltk.probability import FreqDist, ELEProbDist
 from nltk.classify.util import apply_features,accuracy
@@ -18,16 +19,16 @@ from datetime import datetime
 from classifier.bayes import BayesianClassifier
 from classifier.nltksent import SentimentAnalyzer
 from twitter import *
-import json
-import urllib2
+from django.utils import simplejson as json
+import urllib, urllib2
 import xml.etree.ElementTree as ET
 import data.db as db
 from google.appengine.api import memcache
 from BeautifulSoup import BeautifulSoup
-
+from google.appengine.api import urlfetch
 
 import os, sys, datetime, copy, logging, settings
-
+import datetime
 
 
 stopSet = set(['yahoo!', 'an', 'a', 'the' ,'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now'])
@@ -51,8 +52,11 @@ def check_word(  word ):
 class globvars():
   pages = [
       {'name':'Home', 'url':'../../'}, #Make a "the elements" section
-      {'name':'About', 'url':'../../about'} #Make a Contact section here
-     
+      {'name':'About', 'url':'../../about'}, #Make a Contact section here
+      {'name':'NLTK Bayes Classifier ', 'url':'../../nltksentiment'}, #Make a Contact section here
+      {'name':'Bayes Classifier ', 'url':'../../twitgraph'}, #Make a Contact section here
+      {'name':'Most Frequent  Words ', 'url':'../../mostfrequent/?q=google'} #Make a Contact section here
+
     ]
   proj_name = "Hot Trends"
   founders = [
@@ -81,34 +85,16 @@ def index(request):
                email='mick@gus.edu')
   e.hire_date = datetime.datetime.now().date()
   #e.put()
+  day1 = datetime.timedelta(days=1)
   trendslist=[]
   gtrendslist=[]
-
-  twitter = Twitter()
-  results = twitter.trends._woeid(_woeid = 2450022)
-  for location in results:
-      for trend in location["trends"]:
-        trendslist.append(trend["name"])	
-        
-
-  url = "http://www.google.com/trends/hottrends/atom/hourly"
-
-  data =urllib2.urlopen(url)
-
-  tree = ET.parse(data)
-  root = tree.getroot()
-     
-
-  for child in root:      
-        grandchildren = child.getchildren() 
-        for grandchild in grandchildren:
-            if grandchild.text:           
-             soup = BeautifulSoup(grandchild.text)
-             hottrends = []          
-             for ht in soup('li'):
-                  keyword = ht.a.string
-                  trendslist.append(keyword)	
-        
+  yesterday = datetime.date.today()-day1
+  query = Trend.all().filter('created >= ', yesterday).order('-created')
+  results = query.fetch(100)
+  for p in results:
+    trendslist.append(p.title)
+ 
+  
         
   gv = globvars
   context = {
@@ -126,6 +112,84 @@ def about(request):
       }
   context = dict(context, **gv.context)
   return render_to_response('about.html', context)
+
+
+def load(request):
+  ###load twitter ####
+  
+  url = "http://api.twitter.com/1/trends/2450022.json"
+  req = urllib2.Request(url)
+  req.add_header('User-Agent', 'Safari 3.2')
+  response = urllib2.urlopen(req)
+  output_json = json.load(response)
+  for x in output_json:
+      for y in x['trends']:
+         s = Trend.get_or_insert(y['name'], title=y['name'],source="twitter")
+
+
+
+
+  ###laod Google ####
+  gurl = "http://www.google.com/trends/hottrends/atom/hourly"
+  data =urllib2.urlopen(gurl)
+
+  tree = ET.parse(data)
+  root = tree.getroot()
+     
+
+  for child in root:      
+        grandchildren = child.getchildren() 
+        for grandchild in grandchildren:
+            if grandchild.text:           
+             soup = BeautifulSoup(grandchild.text)
+             hottrends = []          
+             for ht in soup('li'):
+                  gkeyword = ht.a.string
+                  s = Trend.get_or_insert(gkeyword, title=str(gkeyword),source="google")
+                  
+
+
+  return HttpResponse("loaded twitter and google") 
+
+
+
+def mostfrequent(request):
+     query='Google'
+     if(request.GET.has_key('q')):
+        query = request.GET['q']    
+
+     search = urllib.urlopen("http://search.twitter.com/search.json?result_type=recent&rpp=100&lang=en&q="+query)
+     dict = simplejson.loads(search.read())
+     tweetstring = " "
+     newlin=" "
+     for result in dict["results"]: # result is a list of dictionaries
+         try:
+           #print " ",result["text"],"\n"    
+           positive = "".join(word[:] for word in result["text"].lower()).split()
+           for word in positive: 
+              if check_word( word ):
+               newlin+=word+" "
+           tweetstring+= newlin
+           
+         except UnicodeEncodeError:
+             pass
+             
+     words = [w for w in tweetstring.split()]
+     freq_dist = nltk.FreqDist(words)
+
+     tokens = freq_dist.keys()
+
+     #50 most frequent
+     most_frequent = tokens[:50]
+     responsetext= most_frequent[0] +"   --- "+most_frequent[1]  +"   --- "+most_frequent[2] +"   --- "+most_frequent[3]  +"   --- "+most_frequent[4] \
+     +"   --- "+most_frequent[5] +"   --- "+most_frequent[6] +"   --- "+most_frequent[7]  +"   --- "+most_frequent[8] +"   --- "+most_frequent[9] \
+     +"   --- "+most_frequent[10] +"   --- "+most_frequent[11]+"   --- "+most_frequent[12]
+     return HttpResponse(responsetext) 
+
+
+
+
+
 
 def resources(request):
   gv = globvars
